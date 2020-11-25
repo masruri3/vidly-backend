@@ -12,10 +12,10 @@ router.get("/", (req, res) => {
   res.send(genres);
 });
 
-router.post("/", async (req, res) => {
-  const { error } = await validateGenre(req.body);
+router.post("/", (req, res) => {
+  const { error } = validateGenre(req.body);
 
-  if (error) return res.status(400).send(error.details.message);
+  if (error) return res.status(400).send(error.details[0].message);
 
   const genre = {
     id: genres.length + 1,
@@ -25,15 +25,15 @@ router.post("/", async (req, res) => {
   res.send(genre);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", (req, res) => {
   const genre = genres.find((c) => c.id === parseInt(req.params.id));
   if (!genre)
     return res
       .status(404)
       .send("The genre with the given ID could not be found");
 
-  const { error } = await validateGenre(req.body);
-  if (error) return res.status(400).send(error.details.message);
+  const { error } = validateGenre(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   genre.name = req.body.name;
   res.send(genre);
@@ -62,12 +62,17 @@ router.get("/:id", (req, res) => {
   res.send(genre);
 });
 
-async function validateGenre(genre) {
+/**
+ * @description Validate genre object
+ * @param {id, name} genre Movies genre object to be validated
+ * @returns {error} Object has value if there is error
+ */
+function validateGenre(genre) {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
   });
 
-  return await schema.validateAsync(genre);
+  return schema.validate(genre);
 }
 
 module.exports = router;
