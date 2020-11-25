@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const joi = require("joi");
 const mongoose = require("mongoose");
@@ -9,7 +10,7 @@ const app = express();
 
 mongoose
   .connect(
-    "mongodb+srv://fcc-zahid:0V5rQk99rHvzmBBX@cluster0.97xw9.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    process.env['mongoURI'],
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
