@@ -8,6 +8,9 @@ router.get("/", async (req, res) => {
   res.send(genres);
 });
 
+/**
+ * @access private
+ */
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
 
