@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
   rental = await rental.save({ session: session });
 
   movie.numberInStock--;
-  movie.save({ session: session });
+  await movie.save({ session: session });
 
   await session.commitTransaction();
   session.endSession();
