@@ -4,16 +4,15 @@ const winston = require("winston");
 require("winston-mongodb");
 
 module.exports = function () {
-  process.on("uncaughtException", (ex) => {
-    winston.error(ex.message, ex);
-    process.exit(1);
-  });
+  winston.exceptions.handle(
+    new winston.transports.File({ filename: "uncaughtExceptions.log" })
+  );
 
   process.on("unhandledRejection", (ex) => {
-    winston.error(ex.message, ex);
-    process.exit(1);
+    throw ex;
   });
 
+  winston.add(new winston.transports.Console({ level: "info" }));
   winston.add(new winston.transports.File({ filename: "logfile.log" }));
   winston.add(
     new winston.transports.MongoDB({
