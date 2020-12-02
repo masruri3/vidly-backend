@@ -17,6 +17,11 @@ const users = require("./routes/users");
 
 const app = express();
 
+process.on("uncaughtException", (ex) => {
+  console.log("WE GOT AN UNCAUGHT EXCEPTIONS");
+  winston.error(ex.message, ex);
+});
+
 winston.add(new winston.transports.File({ filename: "logfile.log" }));
 winston.add(
   new winston.transports.MongoDB({
@@ -28,6 +33,8 @@ winston.add(
     },
   })
 );
+
+throw new Error("Something failed during startup.");
 
 if (!config.has("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not defined.");
