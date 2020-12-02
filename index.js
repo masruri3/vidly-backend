@@ -39,9 +39,6 @@ winston.add(
   })
 );
 
-const p = Promise.reject(new Error("Something failed miserably!"));
-p.then(() => console.log("Done"));
-
 if (!config.has("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not defined.");
   process.exit(1);
