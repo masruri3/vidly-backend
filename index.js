@@ -18,8 +18,13 @@ const users = require("./routes/users");
 const app = express();
 
 process.on("uncaughtException", (ex) => {
-  console.log("WE GOT AN UNCAUGHT EXCEPTIONS");
   winston.error(ex.message, ex);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (ex) => {
+  winston.error(ex.message, ex);
+  process.exit(1);
 });
 
 winston.add(new winston.transports.File({ filename: "logfile.log" }));
@@ -34,7 +39,8 @@ winston.add(
   })
 );
 
-throw new Error("Something failed during startup.");
+const p = Promise.reject(new Error("Something failed miserably!"));
+p.then(() => console.log("Done"));
 
 if (!config.has("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not defined.");
