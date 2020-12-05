@@ -60,11 +60,11 @@ describe("/api/genres", () => {
     let token;
     let name;
 
-    const exec = async () => {
-      return (res = await request(server)
+    const exec = () => {
+      return request(server)
         .post("/api/genres")
         .set("x-auth-token", token)
-        .send({ name }));
+        .send({ name });
     };
 
     beforeEach(() => {
@@ -108,6 +108,134 @@ describe("/api/genres", () => {
 
       expect(res.body).toHaveProperty("_id");
       expect(res.body).toHaveProperty("name", "genre1");
+    });
+  });
+
+  describe("PUT /:id", () => {
+    let id;
+    let name;
+    let genre;
+
+    const exec = () => {
+      return request(server)
+        .put("/api/genres/" + id)
+        .send({ name });
+    };
+
+    beforeEach(async () => {
+      name = "genre2";
+      id = monggoose.Types.ObjectId().toHexString();
+
+      genre = new Genre({
+        _id: id,
+        name: "genre1",
+      });
+      await genre.save();
+    });
+
+    it("should return 400 if genre is less than 5 characters", async () => {
+      name = "1234";
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if genre is more than 50 characters", async () => {
+      name = new Array(52).join("a");
+
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 422 if the given id is invalid", async () => {
+      id = "a";
+      const res = await exec();
+
+      expect(res.status).toBe(422);
+    });
+
+    it("should return 404 if the given id could not be found", async () => {
+      id = monggoose.Types.ObjectId().toHexString();
+      const res = await exec();
+
+      expect(res.status).toBe(404);
+    });
+
+    it("should return 200 if the given id and name is valid", async () => {
+      const res = await exec();
+
+      expect(res.status).toBe(200);
+    });
+
+    it("should return genre if the id and name is valid", async () => {
+      const res = await exec();
+
+      expect(res.body).toMatchObject({ _id: id, name });
+    });
+  });
+
+  describe("DELETE /:id", () => {
+    let id;
+    let token;
+    let genre;
+
+    const exec = () => {
+      return request(server)
+        .delete("/api/genres/" + id)
+        .set("x-auth-token", token);
+    };
+
+    beforeEach(async () => {
+      token = new User({ isAdmin: true }).generateAuthToken();
+
+      id = monggoose.Types.ObjectId().toHexString();
+      genre = { _id: id, name: "genre1" };
+      await Genre.create(genre);
+    });
+
+    it("should return 401 if user not logged in", async () => {
+      token = "";
+
+      const res = await exec();
+
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 403 if user not an admin", async () => {
+      token = new User({ isAdmin: false }).generateAuthToken();
+
+      const res = await exec();
+
+      expect(res.status).toBe(403);
+    });
+
+    it("should return 422 if id is invalid", async () => {
+      id = "a";
+
+      const res = await exec();
+
+      expect(res.status).toBe(422);
+    });
+
+    it("should return 404 if id valid and genre with the given id not found", async () => {
+      id = monggoose.Types.ObjectId();
+
+      const res = await exec();
+
+      expect(res.status).toBe(404);
+    });
+
+    it("should return 200 if id valid and founded genre with the given id", async () => {
+      const res = await exec();
+
+      expect(res.status).toBe(200);
+    });
+
+    it("should return deleted genre if it is valid", async () => {
+      const res = await exec();
+
+      expect(res.body).toMatchObject(genre);
     });
   });
 });
