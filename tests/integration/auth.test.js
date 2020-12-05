@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { Genre } = require("../../models/genre");
 const { User } = require("../../models/user");
+const mongoose = require("mongoose");
 
 let server;
 
@@ -8,7 +9,8 @@ describe("auth middleware", () => {
   beforeEach(() => (server = require("../../index")));
   afterEach(async () => {
     await Genre.deleteMany({});
-    server.close();
+    await mongoose.disconnect();
+    await server.close();
   });
 
   let token;
