@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Backend for online video rent system",
   "main": "index.js",
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node"
+  },
   "scripts": {
-    "test": "jest --watchAll --verbose",
+    "test": "jest --watchAll --verbose --detectOpenHandles",
     "start": "nodemon index.js"
   },
   "author": "Muhammad Zahid Masruri",
