@@ -42,8 +42,15 @@ describe("/api/genres", () => {
       expect(res.body).toHaveProperty("name", genre.name);
     });
 
-    it("should 404 if invalid id is passed", async () => {
+    it("should return 404 if invalid id is passed", async () => {
       const res = await request(server).get("/api/genres/1");
+
+      expect(res.status).toBe(404);
+    });
+
+    it("should return 404 if no genre with the given id exist", async () => {
+      const id = monggoose.Types.ObjectId();
+      const res = await request(server).get("/api/genres/" + id);
 
       expect(res.status).toBe(404);
     });
