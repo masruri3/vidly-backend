@@ -19,15 +19,12 @@ router.post("/", [auth, validate(validateReturn)], async (req, res) => {
   if (rental.dateReturned)
     return res.status(400).send("Return already processed");
 
-  rental.dateReturned = new Date();
-
   // Start a sesssion to perform transaction
   const session = await mongoose.startSession();
   session.startTransaction();
 
   // Update rentals data
-  const rentalDays = moment().diff(rental.dateOut, "days");
-  rental.rentalFee = rentalDays * rental.movie.dailyRentalRate;
+  rental.return();
   await rental.save({ session });
 
   // Increment movie stock
