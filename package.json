@@ -9,7 +9,10 @@
   },
   "scripts": {
     "test": "jest --watchAll --verbose --detectOpenHandles --coverage",
-    "start": "nodemon index.js"
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "12.18.3"
   },
   "author": "Muhammad Zahid Masruri",
   "license": "MIT",
