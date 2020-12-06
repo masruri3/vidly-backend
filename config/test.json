@@ -1,0 +1,4 @@
+{
+  "jwtPrivateKey": "vidly_jwtPrivateKey",
+  "mongoURI": "mongodb+srv://fcc-zahid:0V5rQk99rHvzmBBX@cluster0.97xw9.mongodb.net/vidly_test?retryWrites=true&w=majority"
+}
