@@ -6,14 +6,12 @@ const mongoose = require("mongoose");
 const router = expess.Router();
 
 const auth = require("../middleware/auth");
+const validate = require("../middleware/validate");
 const { Movie } = require("../models/movie");
 const { Rental } = require("../models/rental");
 
-router.post("/", auth, async (req, res) => {
+router.post("/", [auth, validate(validateReturn)], async (req, res) => {
   const { customerId, movieId } = req.body;
-
-  const { error } = validateReturn(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
 
   const rental = await Rental.findOne({
     "customer._id": customerId,
