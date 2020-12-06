@@ -31,7 +31,7 @@ router.post("/", [auth, validate(validateReturn)], async (req, res) => {
   await rental.save({ session });
 
   // Increment movie stock
-  await Movie.update(
+  await Movie.updateOne(
     { _id: rental.movie._id },
     { $inc: { numberInStock: 1 } },
     { session }
