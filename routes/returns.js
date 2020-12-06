@@ -41,7 +41,7 @@ router.post("/", [auth, validate(validateReturn)], async (req, res) => {
   await session.commitTransaction();
   session.endSession();
 
-  return res.status(200).send(rental);
+  return res.send(rental);
 });
 
 function validateReturn(req) {
