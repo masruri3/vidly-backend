@@ -11,7 +11,6 @@ describe("/api/genres", () => {
   });
   afterEach(async () => {
     await Genre.deleteMany({});
-    await mongoose.disconnect();
     await server.close();
   });
 

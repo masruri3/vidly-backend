@@ -9,7 +9,6 @@ describe("auth middleware", () => {
   beforeEach(() => (server = require("../../index")));
   afterEach(async () => {
     await Genre.deleteMany({});
-    await mongoose.disconnect();
     await server.close();
   });
 
