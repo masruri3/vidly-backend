@@ -1,11 +1,11 @@
 const config = require("config");
 
 module.exports = function () {
-  if (!config.has("jwtPrivateKey")) {
+  if (!config.get("jwtPrivateKey")) {
     throw new Error("FATAL ERROR: jwtPrivateKey is not defined.");
   }
 
-  if (!config.has("mongoURI")) {
+  if (!config.get("mongoURI")) {
     throw new Error("FATAL ERROR: jwtPrivateKey is not defined.");
   }
 };

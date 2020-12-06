@@ -14,14 +14,6 @@ module.exports = function () {
   });
 
   winston.add(
-    new winston.transports.Console({
-      level: "info",
-      colorize: true,
-      prettyPrint: true,
-    })
-  );
-  winston.add(new winston.transports.File({ filename: "logfile.log" }));
-  winston.add(
     new winston.transports.MongoDB({
       db: config.get("mongoURI"),
       level: "error",
